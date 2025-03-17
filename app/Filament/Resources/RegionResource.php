@@ -42,8 +42,8 @@ class RegionResource extends Resource
 
                 Forms\Components\View::make('filament.utils.autoComplete')
                 ->viewData([
-                    'regionName' => 'regionName',
-                    'staticURL' => 'staticURL'
+                    'payload' => 'regionName',
+                    'target' => 'staticURL'
                 ]),
             ]);
     }
@@ -82,5 +82,10 @@ class RegionResource extends Resource
             'create' => Pages\CreateRegion::route('/create'),
             'edit' => Pages\EditRegion::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Phân loại';
     }
 }

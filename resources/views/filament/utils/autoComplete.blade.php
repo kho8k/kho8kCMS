@@ -81,10 +81,10 @@
         return str;
     }
     $(document).ready(function() {
-        $('#{{ $regionName }}').on('input', function() {
-            let regionName = $(this).val();
-            let staticURL = toSlug(regionName);
-            $('#{{ $staticURL }}').val(staticURL);
+        $('#{{ $payload }}').on('input', function() {
+            let payload = $(this).val();
+            let target = toSlug(payload);
+            $('#{{ $target }}').val(target);
         });
     });
 </script>
