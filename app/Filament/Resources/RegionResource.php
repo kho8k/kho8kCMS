@@ -40,11 +40,11 @@ class RegionResource extends Resource
                         ->id('staticURL'),
                 ])->columns(2),
 
-                Forms\Components\View::make('filament.utils.autoComplete')
-                ->viewData([
-                    'payload' => 'regionName',
-                    'target' => 'staticURL'
-                ]),
+                // Forms\Components\View::make('filament.utils.autoComplete')
+                // ->viewData([
+                //     'payload' => 'regionName',
+                //     'target' => 'staticURL'
+                // ]),
             ]);
     }
 
