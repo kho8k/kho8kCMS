@@ -10,7 +10,19 @@ class Actor extends Model
     use HasFactory;
 
     protected $fillable = [
-        "actorName",
-        'staticURL',
+        'name',
+        'name_md5',
+        'slug',
+        'gender',
+        'bio',
+        'thumb_url',
+        'seo_title',
+        'seo_des',
+        'seo_key'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
