@@ -10,7 +10,12 @@ class Catalog extends Model
     use HasFactory;
 
     protected $fillable = [
-        "catalogName",
-        'staticURL',
+        'name',
+        'slug',
+        'paginate',
+        'value',
+        'seo_title',
+        'seo_des',
+        'seo_key'
     ];
 }
