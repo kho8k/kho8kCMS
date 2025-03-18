@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Actor extends Model
 {
@@ -20,6 +21,17 @@ class Actor extends Model
         'seo_des',
         'seo_key'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($actor) {
+            if ($actor->thumb_url) {
+                Storage::disk('public')->delete($actor->thumb_url);
+            }
+        });
+    }
 
     public function user()
     {
