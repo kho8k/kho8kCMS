@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class CategoryResource extends Resource
 {
@@ -25,19 +26,36 @@ class CategoryResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Tạo Thể loại')
                 ->schema([
-                    Forms\Components\TextInput::make('categoryName')
+                    Forms\Components\TextInput::make('name')
                         ->label('Tên thể loại')
                         ->required()
                         ->maxLength(255)
                         ->placeholder('Hành động')
-                        ->id('categoryName'),
+                        ->unique(ignoreRecord: true)
+                        ->afterStateUpdated(
+                            function ($state, $set) {
+                                $set('slug', Str::slug($state));
+                            }
+                        ),
 
-                    Forms\Components\TextInput::make('staticURL')
+                    Forms\Components\TextInput::make('slug')
                         ->label('Đường dẫn tĩnh')
-                        ->maxLength(500)
-                        ->required()
+                        ->maxLength(255)
                         ->placeholder('hanh-dong')
-                        ->id('staticURL'),
+                        ->unique(ignoreRecord: true)
+                        ->rules(['alpha_dash'])
+                        ->helperText('Nếu không điền, hệ thống sẽ tự tạo từ tên thể loại'),
+                    
+                    Forms\Components\TextInput::make('seo_title')
+                        ->label('Tiêu đề SEO'),
+                    
+                    Forms\Components\TextInput::make('seo_key')
+                        ->label('Keyword SEO'),
+                    
+                    Forms\Components\Textarea::make('seo_des')
+                        ->label('Mô tả SEO')
+                        ->rows(5)
+                        ->columnSpanFull(),
                 ])->columns(2),
             ]);
     }
@@ -46,8 +64,8 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('categoryName')->sortable()->label('Tên thể loại'),
-                Tables\Columns\TextColumn::make('staticURL')->sortable()->label('Đường dẫn tĩnh'),
+                Tables\Columns\TextColumn::make('name')->sortable()->label('Tên thể loại'),
+                Tables\Columns\TextColumn::make('slug')->sortable()->label('Đường dẫn tĩnh'),
             ])
             ->filters([
                 //
