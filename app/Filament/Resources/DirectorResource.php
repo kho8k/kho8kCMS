@@ -75,10 +75,10 @@ class DirectorResource extends Resource
                             ->columnSpanFull(),
                     ])->columns(2)->columnSpan(2),
 
-                    Forms\Components\Section::make('Minh họa Diễn viên')
+                    Forms\Components\Section::make('Minh họa Đạo diễn')
                     ->schema([
                         Forms\Components\FileUpload::make('thumb_url')
-                            ->label('Ảnh diễn viên')
+                            ->label('Ảnh đạo diễn')
                             ->image()
                             ->maxSize(5120)
                             ->directory('director')
