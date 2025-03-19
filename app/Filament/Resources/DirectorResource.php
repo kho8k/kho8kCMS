@@ -56,7 +56,7 @@ class DirectorResource extends Resource
                         Forms\Components\TextInput::make('slug')
                             ->label('Đường dẫn tĩnh')
                             ->maxLength(500)
-                            ->required()
+                            // ->required()
                             ->placeholder('hwang-dong-hyuk')
                             ->unique(ignoreRecord: true)
                             ->rules(['alpha_dash'])
