@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ActorResource\Pages;
-use App\Filament\Resources\ActorResource\RelationManagers;
-use App\Models\Actor;
+use App\Filament\Resources\DirectorResource\Pages;
+use App\Filament\Resources\DirectorResource\RelationManagers;
+use App\Models\Director;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,11 +14,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
-class ActorResource extends Resource
+class DirectorResource extends Resource
 {
-    protected static ?string $model = Actor::class;
+    protected static ?string $model = Director::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-video-camera';
 
     public static function form(Form $form): Form
     {
@@ -26,13 +26,13 @@ class ActorResource extends Resource
             ->schema([
                 Forms\Components\Grid::make(3)
                 ->schema([
-                    Forms\Components\Section::make('Tạo Diễn viên')
+                    Forms\Components\Section::make('Tạo Đạo diễn')
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->label('Tên diễn viên')
+                            ->label('Tên đạo diễn')
                             ->required()
                             ->maxLength(255)
-                            ->placeholder('Gong Yoo')
+                            ->placeholder('Hwang Dong Hyuk')
                             ->unique(ignoreRecord: true)
                             ->afterStateUpdated(function ($state, $set) {
                                 $set('slug', Str::slug($state));
@@ -57,10 +57,10 @@ class ActorResource extends Resource
                             ->label('Đường dẫn tĩnh')
                             ->maxLength(500)
                             ->required()
-                            ->placeholder('gong-yoo')
+                            ->placeholder('hwang-dong-hyuk')
                             ->unique(ignoreRecord: true)
                             ->rules(['alpha_dash'])
-                            ->helperText('Nếu không điền, hệ thống sẽ tự tạo từ tên diễn viên')
+                            ->helperText('Nếu không điền, hệ thống sẽ tự tạo từ tên đạo diễn')
                             ->columnSpanFull(),
 
                         Forms\Components\TextInput::make('seo_title')
@@ -75,13 +75,13 @@ class ActorResource extends Resource
                             ->columnSpanFull(),
                     ])->columns(2)->columnSpan(2),
 
-                    Forms\Components\Section::make('Minh họa Diễn viên')
+                    Forms\Components\Section::make('Minh họa Đạo diễn')
                     ->schema([
                         Forms\Components\FileUpload::make('thumb_url')
-                            ->label('Ảnh diễn viên')
+                            ->label('Ảnh đạo diễn')
                             ->image()
                             ->maxSize(5120)
-                            ->directory('actor')
+                            ->directory('director')
                             ->visibility('public'),
                         
                         Forms\Components\Textarea::make('bio')
@@ -96,7 +96,7 @@ class ActorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->label('Tên diễn viên'),
+                Tables\Columns\TextColumn::make('name')->sortable()->label('Tên đạo diễn'),
                 Tables\Columns\TextColumn::make('slug')->sortable()->label('Đường dẫn tĩnh'),
                 Tables\Columns\ImageColumn::make('thumb_url')->circular()->label('Ảnh'),
             ])
@@ -123,9 +123,9 @@ class ActorResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListActors::route('/'),
-            'create' => Pages\CreateActor::route('/create'),
-            'edit' => Pages\EditActor::route('/{record}/edit'),
+            'index' => Pages\ListDirectors::route('/'),
+            'create' => Pages\CreateDirector::route('/create'),
+            'edit' => Pages\EditDirector::route('/{record}/edit'),
         ];
     }
 
