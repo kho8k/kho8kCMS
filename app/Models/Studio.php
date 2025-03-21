@@ -18,4 +18,9 @@ class Studio extends Model
         'seo_des',
         'seo_key'
     ];
+
+    public function movies()
+    {
+        return $this->belongsToMany(Movie::class);
+    }
 }
