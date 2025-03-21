@@ -402,6 +402,7 @@ class MovieResource extends Resource
                                     'embedded' => 'Nhúng',
                                     'm3u8' => 'M3U8',
                                 ])
+                                ->selectablePlaceholder(false)
                                 ->columnSpan(2),
 
                                 Forms\Components\TextInput::make('link')
