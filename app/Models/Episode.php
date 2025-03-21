@@ -5,21 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tag extends Model
+class Episode extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'movie_id',
+        'server',
         'name',
-        'name_md5',
         'slug',
-        'seo_title',
-        'seo_des',
-        'seo_key'
+        'type',
+        'link',
+        'has_report',
+        'report_message',
     ];
 
-    public function movies()
+    public function movie()
     {
-        return $this->belongsToMany(Movie::class);
+        return $this->belongsTo(Movie::class);
     }
 }

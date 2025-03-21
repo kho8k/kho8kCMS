@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DirectorResource\Pages;
-use App\Filament\Resources\DirectorResource\RelationManagers;
-use App\Models\Director;
+use App\Filament\Resources\StudioResource\Pages;
+use App\Filament\Resources\StudioResource\RelationManagers;
+use App\Models\Studio;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,11 +14,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
-class DirectorResource extends Resource
+class StudioResource extends Resource
 {
-    protected static ?string $model = Director::class;
+    protected static ?string $model = Studio::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-video-camera';
+    protected static ?string $navigationIcon = 'heroicon-o-film';
 
     public static function form(Form $form): Form
     {
@@ -26,13 +26,13 @@ class DirectorResource extends Resource
             ->schema([
                 Forms\Components\Grid::make(3)
                 ->schema([
-                    Forms\Components\Section::make('Tạo Đạo diễn')
+                    Forms\Components\Section::make('Tạo Studio')
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->label('Tên đạo diễn')
+                            ->label('Tên studio')
                             ->required()
                             ->maxLength(255)
-                            ->placeholder('Hwang Dong Hyuk')
+                            ->placeholder('Siren Pictures Inc.')
                             ->unique(ignoreRecord: true)
                             ->afterStateUpdated(function ($state, $set) {
                                 $set('slug', Str::slug($state));
@@ -45,48 +45,24 @@ class DirectorResource extends Resource
                             ->required()
                             ->unique(ignoreRecord: true),
 
-                        Forms\Components\Select::make('gender')
-                            ->label('Giới tính')
-                            ->options([
-                                'male' => 'Nam',
-                                'female' => 'Nữ',
-                                'other' => 'Khác',
-                            ]),
-
                         Forms\Components\TextInput::make('slug')
                             ->label('Đường dẫn tĩnh')
                             ->maxLength(500)
-                            // ->required()
-                            ->placeholder('hwang-dong-hyuk')
+                            ->placeholder('siren-pictures-inc')
                             ->unique(ignoreRecord: true)
                             ->rules(['alpha_dash'])
-                            ->helperText('Nếu không điền, hệ thống sẽ tự tạo từ tên đạo diễn')
-                            ->columnSpanFull(),
-
-                        Forms\Components\TextInput::make('seo_title')
-                            ->label('Tiêu đề SEO'),
-                        
-                        Forms\Components\TextInput::make('seo_key')
-                            ->label('Keyword SEO'),
-                        
-                        Forms\Components\Textarea::make('seo_des')
-                            ->label('Mô tả SEO')
-                            ->rows(5)
+                            ->helperText('Nếu không điền, hệ thống sẽ tự tạo từ tên studio')
                             ->columnSpanFull(),
                     ])->columns(2)->columnSpan(2),
 
-                    Forms\Components\Section::make('Minh họa Đạo diễn')
+                    Forms\Components\Section::make('Minh họa Studio')
                     ->schema([
                         Forms\Components\FileUpload::make('thumb_url')
-                            ->label('Ảnh đạo diễn')
+                            ->label('Ảnh studio')
                             ->image()
                             ->maxSize(5120)
-                            ->directory('director')
+                            ->directory('studio')
                             ->visibility('public'),
-                        
-                        Forms\Components\Textarea::make('bio')
-                            ->label('Tiểu sử')
-                            ->rows(3),
                     ])->columnSpan(1),
                 ]),
             ]);
@@ -96,7 +72,7 @@ class DirectorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->label('Tên đạo diễn'),
+                Tables\Columns\TextColumn::make('name')->sortable()->label('Tên studio'),
                 Tables\Columns\TextColumn::make('slug')->sortable()->label('Đường dẫn tĩnh'),
                 Tables\Columns\ImageColumn::make('thumb_url')->circular()->label('Ảnh'),
             ])
@@ -123,9 +99,9 @@ class DirectorResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDirectors::route('/'),
-            'create' => Pages\CreateDirector::route('/create'),
-            'edit' => Pages\EditDirector::route('/{record}/edit'),
+            'index' => Pages\ListStudios::route('/'),
+            'create' => Pages\CreateStudio::route('/create'),
+            'edit' => Pages\EditStudio::route('/{record}/edit'),
         ];
     }
 

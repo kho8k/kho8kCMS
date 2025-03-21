@@ -56,7 +56,7 @@ class ActorResource extends Resource
                         Forms\Components\TextInput::make('slug')
                             ->label('Đường dẫn tĩnh')
                             ->maxLength(500)
-                            ->required()
+                            // ->required()
                             ->placeholder('gong-yoo')
                             ->unique(ignoreRecord: true)
                             ->rules(['alpha_dash'])

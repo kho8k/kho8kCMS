@@ -5,24 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Region extends Model
+class Studio extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'name_md5',
         'slug',
+        'thumb_url',
         'seo_title',
         'seo_des',
-        'seo_key',
-        'user_id',
-        'user_name'
+        'seo_key'
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     public function movies()
     {
