@@ -33,8 +33,10 @@ class RegionResource extends Resource
                         ->placeholder('Việt Nam')
                         ->unique(ignoreRecord: true)
                         ->afterStateUpdated(
-                            function ($state, $set) {
-                                $set('slug', Str::slug($state));
+                            function ($state, $get, $set) {
+                                if (!$get('slug')) {
+                                    $set('slug', Str::slug($state));
+                                }
                             }
                         ),
 

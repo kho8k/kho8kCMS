@@ -32,9 +32,13 @@ class CatalogResource extends Resource
                         ->maxLength(255)
                         ->placeholder('Phim bộ')
                         ->unique(ignoreRecord: true)
-                        ->afterStateUpdated(function ($state, $set) {
-                            $set('slug', Str::slug($state));
-                        })
+                        ->afterStateUpdated(
+                            function ($state, $get, $set) {
+                                if (!$get('slug')) {
+                                    $set('slug', Str::slug($state));
+                                }
+                            }
+                        )
                         ->columnSpan(2),
 
                     Forms\Components\TextInput::make('slug')
