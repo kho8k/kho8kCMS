@@ -115,6 +115,7 @@ class MovieResource extends Resource
                             Forms\Components\Radio::make('type')
                             ->label('Định dạng')
                             ->required()
+                            ->default('single')
                             ->options([
                                 'single' => 'Phim lẻ',
                                 'series' => 'Phim bộ',
@@ -124,6 +125,7 @@ class MovieResource extends Resource
                             Forms\Components\Radio::make('status')
                             ->label('Tình trạng')
                             ->required()
+                            ->default('completed')
                             ->options([
                                 'trailer' => 'Sắp chiếu',
                                 'ongoing' => 'Đang chiếu',
@@ -375,76 +377,20 @@ class MovieResource extends Resource
                         Forms\Components\Tabs\Tab::make('Tập phim')
                         ->icon(icon: 'heroicon-o-film')
                         ->schema([
-                            // Forms\Components\Repeater::make('episodes')
-                            // ->label('Tập phim')
-                            // ->relationship('episodes')
-                            // ->schema([
-                            //     Forms\Components\TextInput::make('server')
-                            //     ->label('Tên server')
-                            //     ->placeholder('Thuyết minh #1')
-                            //     ->columnSpan(3),
-
-                            //     Forms\Components\TextInput::make('name')
-                            //     ->label('Tên tập')
-                            //     ->placeholder('Tập 1')
-                            //     ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state)))
-                            //     ->columnSpan(3),
-
-                            //     Forms\Components\TextInput::make('slug')
-                            //     ->placeholder('tap-1')
-                            //     ->label('Đường dẫn tĩnh')
-                            //     ->helperText('Nếu không điền, hệ thống sẽ tự tạo từ tên tập')
-                            //     ->columnSpan(2),
-
-                            //     Forms\Components\Select::make('type')
-                            //     ->label('Loại')
-                            //     ->options([
-                            //         'embedded' => 'Nhúng',
-                            //         'm3u8' => 'M3U8',
-                            //     ])
-                            //     ->selectablePlaceholder(false)
-                            //     ->columnSpan(2),
-
-                            //     Forms\Components\TextInput::make('link')
-                            //     ->label('Đường dẫn phim')
-                            //     ->url()
-                            //     ->columnSpan(2),
-                            // ])
-                            // ->defaultItems(0)
-                            // ->addActionLabel('Thêm Tập phim')
-                            // ->cloneable()
-                            // ->addActionAlignment(Alignment::End)
-                            // ->columns(6)
-                            // ->columnSpanFull(),
-
-                            Forms\Components\TextInput::make('server_name')
-                            ->label('Tên server')
-                            ->placeholder('Thuyết minh #1')
-                            ->afterStateUpdated(
-                                function ($state, $set) {
-                                    $set('episodes.*.server', $state);
-                                }
-                            )
-                            ->reactive()
-                            ->columnSpan(3),
-
                             Forms\Components\Repeater::make('episodes')
                             ->label('Tập phim')
                             ->relationship('episodes')
                             ->schema([
-                                Forms\Components\Hidden::make('server'),
+                                Forms\Components\TextInput::make('server')
+                                ->label('Tên server')
+                                ->placeholder('Thuyết minh #1')
+                                ->columnSpan(3),
 
                                 Forms\Components\TextInput::make('name')
                                 ->label('Tên tập')
                                 ->placeholder('Tập 1')
-                                ->afterStateUpdated(
-                                    function ($state, $get, $set) {
-                                        if (!$get('slug')) {
-                                            $set('slug', Str::slug($state));
-                                        }
-                                    }
-                                )
-                                ->columnSpan(2),
+                                ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state)))
+                                ->columnSpan(3),
 
                                 Forms\Components\TextInput::make('slug')
                                 ->placeholder('tap-1')
@@ -464,11 +410,10 @@ class MovieResource extends Resource
                                 Forms\Components\TextInput::make('link')
                                 ->label('Đường dẫn phim')
                                 ->url()
-                                ->columnSpanFull(),
+                                ->columnSpan(2),
                             ])
                             ->addActionLabel('Thêm Tập phim')
                             ->cloneable()
-                            ->collapsible()
                             ->addActionAlignment(Alignment::End)
                             ->columns(6)
                             ->columnSpanFull(),
