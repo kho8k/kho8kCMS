@@ -34,9 +34,13 @@ class StudioResource extends Resource
                             ->maxLength(255)
                             ->placeholder('Siren Pictures Inc.')
                             ->unique(ignoreRecord: true)
-                            ->afterStateUpdated(function ($state, $set) {
-                                $set('slug', Str::slug($state));
-                            })
+                            ->afterStateUpdated(
+                                function ($state, $get, $set) {
+                                    if (!$get('slug')) {
+                                        $set('slug', Str::slug($state));
+                                    }
+                                }
+                            )
                             ->afterStateUpdated(function ($state, $set) {
                                 $set('name_md5', md5($state));
                             }),

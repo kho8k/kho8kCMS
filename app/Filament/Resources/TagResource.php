@@ -33,8 +33,10 @@ class TagResource extends Resource
                         ->placeholder('Squid Game')
                         ->unique(ignoreRecord: true)
                         ->afterStateUpdated(
-                            function ($state, $set) {
-                                $set('slug', Str::slug($state));
+                            function ($state, $get, $set) {
+                                if (!$get('slug')) {
+                                    $set('slug', Str::slug($state));
+                                }
                             }
                         )
                         ->afterStateUpdated(

@@ -34,9 +34,13 @@ class ActorResource extends Resource
                             ->maxLength(255)
                             ->placeholder('Gong Yoo')
                             ->unique(ignoreRecord: true)
-                            ->afterStateUpdated(function ($state, $set) {
-                                $set('slug', Str::slug($state));
-                            })
+                            ->afterStateUpdated(
+                                function ($state, $get, $set) {
+                                    if (!$get('slug')) {
+                                        $set('slug', Str::slug($state));
+                                    }
+                                }
+                            )
                             ->afterStateUpdated(function ($state, $set) {
                                 $set('name_md5', md5($state));
                             }),
@@ -56,7 +60,6 @@ class ActorResource extends Resource
                         Forms\Components\TextInput::make('slug')
                             ->label('Đường dẫn tĩnh')
                             ->maxLength(500)
-                            // ->required()
                             ->placeholder('gong-yoo')
                             ->unique(ignoreRecord: true)
                             ->rules(['alpha_dash'])
