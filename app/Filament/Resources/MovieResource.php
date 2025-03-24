@@ -39,8 +39,10 @@ class MovieResource extends Resource
                             ->placeholder('Trò Chơi Con Mực')
                             ->maxLength(1024)
                             ->columnSpan(3)
-                            ->afterStateUpdated(function ($state, $set) {
-                                $set('slug', Str::slug($state));
+                            ->afterStateUpdated(function ($state, $get, $set) {
+                                if (!$get('slug')) {
+                                    $set('slug', Str::slug($state));
+                                }
                             }),
 
                             Forms\Components\TextInput::make('origin_name')
@@ -83,14 +85,12 @@ class MovieResource extends Resource
 
                             Forms\Components\TextInput::make('episode_current')
                             ->label('Tập phim hiện tại')
-                            ->integer()
-                            ->placeholder('5')
+                            ->placeholder('Tập 5')
                             ->columnSpan(2),
 
                             Forms\Components\TextInput::make('episode_total')
                             ->label('Tổng số tập phim')
-                            ->integer()
-                            ->placeholder('12')
+                            ->placeholder('12 tập')
                             ->columnSpan(2),
 
                             Forms\Components\TextInput::make('language')
@@ -373,22 +373,78 @@ class MovieResource extends Resource
                             ->columnSpanFull(),
                         ]),
                         Forms\Components\Tabs\Tab::make('Tập phim')
-                        ->icon('heroicon-o-film')
+                        ->icon(icon: 'heroicon-o-film')
                         ->schema([
+                            // Forms\Components\Repeater::make('episodes')
+                            // ->label('Tập phim')
+                            // ->relationship('episodes')
+                            // ->schema([
+                            //     Forms\Components\TextInput::make('server')
+                            //     ->label('Tên server')
+                            //     ->placeholder('Thuyết minh #1')
+                            //     ->columnSpan(3),
+
+                            //     Forms\Components\TextInput::make('name')
+                            //     ->label('Tên tập')
+                            //     ->placeholder('Tập 1')
+                            //     ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state)))
+                            //     ->columnSpan(3),
+
+                            //     Forms\Components\TextInput::make('slug')
+                            //     ->placeholder('tap-1')
+                            //     ->label('Đường dẫn tĩnh')
+                            //     ->helperText('Nếu không điền, hệ thống sẽ tự tạo từ tên tập')
+                            //     ->columnSpan(2),
+
+                            //     Forms\Components\Select::make('type')
+                            //     ->label('Loại')
+                            //     ->options([
+                            //         'embedded' => 'Nhúng',
+                            //         'm3u8' => 'M3U8',
+                            //     ])
+                            //     ->selectablePlaceholder(false)
+                            //     ->columnSpan(2),
+
+                            //     Forms\Components\TextInput::make('link')
+                            //     ->label('Đường dẫn phim')
+                            //     ->url()
+                            //     ->columnSpan(2),
+                            // ])
+                            // ->defaultItems(0)
+                            // ->addActionLabel('Thêm Tập phim')
+                            // ->cloneable()
+                            // ->addActionAlignment(Alignment::End)
+                            // ->columns(6)
+                            // ->columnSpanFull(),
+
+                            Forms\Components\TextInput::make('server_name')
+                            ->label('Tên server')
+                            ->placeholder('Thuyết minh #1')
+                            ->afterStateUpdated(
+                                function ($state, $set) {
+                                    $set('episodes.*.server', $state);
+                                }
+                            )
+                            ->reactive()
+                            ->columnSpan(3),
+
                             Forms\Components\Repeater::make('episodes')
                             ->label('Tập phim')
                             ->relationship('episodes')
                             ->schema([
-                                Forms\Components\TextInput::make('server')
-                                ->label('Tên server')
-                                ->placeholder('Thuyết minh #1')
-                                ->columnSpan(3),
+                                Forms\Components\Hidden::make('server'),
 
                                 Forms\Components\TextInput::make('name')
                                 ->label('Tên tập')
                                 ->placeholder('Tập 1')
-                                ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state)))
-                                ->columnSpan(3),
+                                ->afterStateUpdated(
+                                    function ($state, $get, $set) {
+                                        if (!$get('slug')) {
+                                            $set('slug', Str::slug($state));
+                                        }
+                                    }
+                                )
+                                ->columnSpan(2),
 
                                 Forms\Components\TextInput::make('slug')
                                 ->placeholder('tap-1')
@@ -408,11 +464,11 @@ class MovieResource extends Resource
                                 Forms\Components\TextInput::make('link')
                                 ->label('Đường dẫn phim')
                                 ->url()
-                                ->columnSpan(2),
+                                ->columnSpanFull(),
                             ])
-                            ->defaultItems(0)
                             ->addActionLabel('Thêm Tập phim')
                             ->cloneable()
+                            ->collapsible()
                             ->addActionAlignment(Alignment::End)
                             ->columns(6)
                             ->columnSpanFull(),
@@ -435,7 +491,38 @@ class MovieResource extends Resource
                         Forms\Components\Tabs\Tab::make('Khác')
                         ->icon('heroicon-o-question-mark-circle')
                         ->schema([
-                            
+                            Forms\Components\TextInput::make('view_day')
+                            ->label('Lượt xem trong ngày')
+                            ->integer()
+                            ->columnSpan(2),
+
+                            Forms\Components\TextInput::make('view_week')
+                            ->label('Lượt xem trong tuần')
+                            ->integer()
+                            ->columnSpan(2),
+
+                            Forms\Components\TextInput::make('view_month')
+                            ->label('Lượt xem trong tháng')
+                            ->integer()
+                            ->columnSpan(2),
+
+                            Forms\Components\TextInput::make('view_total')
+                            ->label('Lượt xem tổng')
+                            ->integer()
+                            ->columnSpanFull(),
+
+                            Forms\Components\TextInput::make('rating_count')
+                            ->label('Số lượng đánh giá')
+                            ->integer()
+                            ->columnSpan(3),
+
+                            Forms\Components\TextInput::make('rating_star')
+                            ->label('Đánh giá theo sao')
+                            ->placeholder('1 - 5')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(5)
+                            ->columnSpan(3),
                         ]),
                     ])->columns(6)->columnSpan(2),
 
@@ -481,8 +568,36 @@ class MovieResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->label('Thông tin phim'),
-                Tables\Columns\ImageColumn::make('poster_url')->size(100)->label('Poster'),
+                Tables\Columns\TextColumn::make('movie_info')
+                ->label('Thông tin phim')
+                ->sortable()
+                ->html()
+                ->getStateUsing(
+                    fn ($record) => "
+                        <strong style=\"color:Purple;\">{$record->name}</strong> <span style=\"color:Green;\">[{$record->publish_year}]</span>
+                        <br>
+                        <span style=\"color:Lightblue;\">({$record->origin_name})</span> <span style=\"color:Red\">[{$record->episode_current}]</span>
+                    "
+                ),
+                Tables\Columns\TextColumn::make('type')
+                ->label('Loại phim')
+                ->sortable()
+                ->badge()
+                ->color(fn ($state) => match ($state) {
+                    'single' => 'gray',
+                    'series' => 'primary'
+                }),
+
+                Tables\Columns\TextColumn::make('status')
+                ->label('Tình trạng')
+                ->sortable()
+                ->badge()
+                ->color(fn ($state) => match ($state) {
+                    'trailer' => 'info',
+                    'ongoing' => 'warning',
+                    'completed' => 'success',
+                }),
+                Tables\Columns\ImageColumn::make('thumb_url')->height(150)->width(105)->label('Thumb'),
             ])
             ->filters([
                 //
