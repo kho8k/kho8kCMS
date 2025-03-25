@@ -404,6 +404,7 @@ class MovieResource extends Resource
                                     'embedded' => 'Nhúng',
                                     'm3u8' => 'M3U8',
                                 ])
+                                ->default('embedded')
                                 ->selectablePlaceholder(false)
                                 ->columnSpan(2),
 
@@ -439,31 +440,37 @@ class MovieResource extends Resource
                             Forms\Components\TextInput::make('view_day')
                             ->label('Lượt xem trong ngày')
                             ->integer()
+                            ->default(0)
                             ->columnSpan(2),
 
                             Forms\Components\TextInput::make('view_week')
                             ->label('Lượt xem trong tuần')
                             ->integer()
+                            ->default(0)
                             ->columnSpan(2),
 
                             Forms\Components\TextInput::make('view_month')
                             ->label('Lượt xem trong tháng')
                             ->integer()
+                            ->default(0)
                             ->columnSpan(2),
 
                             Forms\Components\TextInput::make('view_total')
                             ->label('Lượt xem tổng')
                             ->integer()
+                            ->default(0)
                             ->columnSpanFull(),
 
                             Forms\Components\TextInput::make('rating_count')
                             ->label('Số lượng đánh giá')
                             ->integer()
+                            ->default(0)
                             ->columnSpan(3),
 
                             Forms\Components\TextInput::make('rating_star')
                             ->label('Đánh giá theo sao')
                             ->placeholder('1 - 5')
+                            ->default(5)
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(5)
