@@ -405,6 +405,7 @@ class MovieResource extends Resource
                                     'm3u8' => 'M3U8',
                                 ])
                                 ->default('embedded')
+                                ->required()
                                 ->selectablePlaceholder(false)
                                 ->columnSpan(2),
 
