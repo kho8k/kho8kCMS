@@ -7,4 +7,7 @@
             Lưu
         </x-filament::button>
     </form>
+    <script>
+        ''.replace('', '')
+    </script>
 </x-filament::page>
