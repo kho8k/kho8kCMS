@@ -9,6 +9,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 
@@ -49,9 +50,6 @@ class Generals extends Page
                         ->label(Setting::getName('site_brand', 'Site Brand'))
                         ->rules(['regex:/^([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/']),
 
-                    Forms\Components\TextInput::make('site_logo')
-                        ->label(Setting::getName('site_logo', 'Site Logo')),
-
                     Forms\Components\TextInput::make('site_image_proxy_url')
                         ->label(Setting::getName('site_image_proxy_url', 'Cấu hình proxy'))
                         ->url()
@@ -61,6 +59,37 @@ class Generals extends Page
                         ->label(Setting::getName('site_image_proxy_enable', 'Sử dụng Proxy cho đường dẫn hình ảnh')),
                 ])
                 ->columnSpan(2),
+
+                Forms\Components\Section::make()
+                ->schema([
+                    Forms\Components\TextInput::make('site_logo')
+                        ->label(Setting::getName('site_logo', 'Site Logo'))
+                        ->id('site_logo')
+                        ->readOnly()
+                        ->suffix(new HTMLString('
+                        <button type="button" onclick="(() => {
+                            window.open(\'/file-manager/fm-button\', \'fm\', \'width=900,height=600\')
+                            window.fmSetLink = (url) => {
+                                let imagePath = url.replace(location.origin + \'/storage/\', \'\')
+                                document.querySelector(\'#site_logo\').value = imagePath;
+                                document.querySelector(\'#logoImage\').src = \'/storage/\' + imagePath;
+                                document.querySelector(\'#site_logo\').dispatchEvent(new Event(\'input\'));
+                            };
+                        })()">
+                            Chọn Logo
+                        </button>')),
+
+                    Forms\Components\Placeholder::make('')
+                        ->label('Hình ảnh Site Logo')
+                        ->content(function ($get) {
+                            $url = $get('site_logo');
+                            if ($url) {
+                                return new HTMLString('<img id="logoImage" src="' . Storage::url($url) . '" alt="Logo" style="object-fit: contain; width: 20vw; height: 20vw;"/>');
+                            }
+                            return 'Chưa có logo';
+                        }),
+                ])
+                ->columnSpan(1),
             ]),
         ])->statePath('data');
     }
