@@ -72,8 +72,10 @@ class Generals extends Page
                             window.fmSetLink = (url) => {
                                 let imagePath = url.replace(location.origin + \'/storage/\', \'\')
                                 document.querySelector(\'#site_logo\').value = imagePath;
-                                document.querySelector(\'#logoImage\').src = \'/storage/\' + imagePath;
                                 document.querySelector(\'#site_logo\').dispatchEvent(new Event(\'input\'));
+                                let imageLogo = document.querySelector(\'#logoImage\');
+                                imageLogo.src = \'/storage/\' + imagePath;
+                                imageLogo.style.display = \'block\';
                             };
                         })()">
                             Chọn Logo
@@ -84,9 +86,9 @@ class Generals extends Page
                         ->content(function ($get) {
                             $url = $get('site_logo');
                             if ($url) {
-                                return new HTMLString('<img id="logoImage" src="' . Storage::url($url) . '" alt="Logo" style="object-fit: contain; width: 20vw; height: 20vw;"/>');
+                                return new HTMLString('<img id="logoImage" src="' . Storage::url($url) . '" alt="Logo" style="display: block; object-fit: contain; width: 20vw; height: 20vw;"/>');
                             }
-                            return 'Chưa có logo';
+                            return new HTMLString('<img id="logoImage" style="display: none; object-fit: contain; width: 20vw; height: 20vw;">');
                         }),
                 ])
                 ->columnSpan(1),
