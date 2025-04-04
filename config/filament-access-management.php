@@ -54,9 +54,9 @@ return [
             'permission' => 'heroicon-o-lock-closed',
             'menu' => 'heroicon-o-bars-3-bottom-left',
         ],
-        'pages' => [
-            Pages\Menu::class,
-        ],
+        // 'pages' => [
+        //     Pages\Menu::class,
+        // ],
         'resources' => [
             Resources\UserResource::class,
             Resources\RoleResource::class,

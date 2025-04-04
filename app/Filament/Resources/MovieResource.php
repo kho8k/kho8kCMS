@@ -526,37 +526,58 @@ class MovieResource extends Resource
                 ->sortable()
                 ->html()
                 ->getStateUsing(
-                    fn ($record) => "
-                        <strong style=\"color:Purple;\">{$record->name}</strong> <span style=\"color:Green;\">[{$record->publish_year}]</span>
-                        <br>
-                        <span style=\"color:Lightblue;\">({$record->origin_name})</span> <span style=\"color:Red\">[{$record->episode_current}]</span>
-                    "
+                    function ($record) {
+                        $type = ($record->type == 'series') ? 'primary' : 'gray';
+                        $status = ($record->status == 'trailer') ? 'info' : (($record->status == 'ongoing') ? 'warning' : 'success');
+                        return "
+                            <strong style=\"color:Purple;\">{$record->name}</strong> <span style=\"color:Green;\">[{$record->publish_year}]</span>
+                            <br>
+                            <span style=\"color:Lightblue;\">({$record->origin_name})</span> <span style=\"color:Red\">[{$record->episode_current}]</span>
+                            <br>
+                            <br>
+                            <span style=\"--c-50:var(--{$type}-50);--c-400:var(--{$type}-400);--c-600:var(--{$type}-600);\" class=\"fi-badge flex items-center justify-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 min-w-[theme(spacing.6)] py-1 fi-color-custom bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30 fi-color-{$type}\">
+                                <span class=\"grid\">
+                                    <span class=\"truncate\">
+                                        {$record->type}
+                                    </span>
+                                </span>
+                            </span>
+                            <span style=\"--c-50:var(--{$status}-50);--c-400:var(--{$status}-400);--c-600:var(--{$status}-600);\" class=\"fi-badge flex items-center justify-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 min-w-[theme(spacing.6)] py-1 fi-color-custom bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30 fi-color-{$status}\">
+                                <span class=\"grid\">
+                                    <span class=\"truncate\">
+                                        {$record->status}
+                                    </span>
+                                </span>
+                            </span>
+                        ";
+                    }
                 ),
-                Tables\Columns\TextColumn::make('type')
-                ->label('Loại phim')
-                ->sortable()
-                ->badge()
-                ->color(fn ($state) => match ($state) {
-                    'single' => 'gray',
-                    'series' => 'primary'
-                }),
 
-                Tables\Columns\TextColumn::make('status')
-                ->label('Tình trạng')
-                ->sortable()
-                ->badge()
-                ->color(fn ($state) => match ($state) {
-                    'trailer' => 'info',
-                    'ongoing' => 'warning',
-                    'completed' => 'success',
-                }),
                 Tables\Columns\ImageColumn::make('thumb_url')->height(150)->width(105)->label('Thumb'),
+
+                Tables\Columns\TextColumn::make('categories')
+                ->label('Thể loại')
+                ->formatStateUsing(fn ($record) => $record->categories->pluck('name')->join(', '))
+                ->sortable(),
+
+                Tables\Columns\TextColumn::make('regions')
+                ->label('Khu vực')
+                ->formatStateUsing(fn ($record) => $record->regions->pluck('name')->join(', ')),
+                
+                Tables\Columns\TextColumn::make('updated_at')
+                ->label('Cập nhật lúc')
+                ->sortable(),
+
+                Tables\Columns\TextColumn::make('view_total')
+                ->label('Lượt xem')
+                ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
